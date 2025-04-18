@@ -12,11 +12,11 @@
 // -----------------------------
 // 1. Задание параметров задачи
 // -----------------------------
-#define DIMENSIONS 10
-#define N_PARTICLES 100
-#define ITERATION 100
-#define MIN_RAND -100
-#define MAX_RAND 100
+#define DIMENSIONS 2
+#define N_PARTICLES 300
+#define ITERATION 40
+#define MIN_RAND -10
+#define MAX_RAND 10
 
 #define G0 100       // Начальное значение гравитационной константы
 #define alpha 20     // Параметр экспоненциального затухания G(t)
@@ -32,7 +32,7 @@ double random(double lo, double hi) {
 
 
 double target_function (std::vector<double> possitions) {
-    double sum;
+    double sum = 0;
     for (auto p : possitions){
         sum += pow(p,2);
     }
@@ -53,7 +53,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v){
 }
 
 double calculate_dist(std::vector<double> pos_i, std::vector<double> pos_j){
-    double sum=0;
+    double sum = 0;
     for (int d = 0; d<DIMENSIONS; d++){
         sum += pow((pos_i[d]-pos_j[d]),2);
     }
@@ -83,6 +83,8 @@ int main() {
     double global_best_fitness = std::numeric_limits<double>::infinity();
     std::vector<double> fitness(N_PARTICLES);
     std::vector<double> masses;
+    std::vector<double> history;
+
     double G;
 
     for (int iter = 0; iter < ITERATION; ++iter) {
@@ -98,6 +100,8 @@ int main() {
             global_best_ptr = std::make_unique<std::vector<double>>(positions[min_index]);
         }
 
+        history.push_back(global_best_fitness);
+
         // Найдем best и worst фитнес
         double best_fit = *std::min_element(fitness.begin(), fitness.end());
         double worst_fit = *std::max_element(fitness.begin(), fitness.end());
@@ -105,25 +109,33 @@ int main() {
         // -------------------------------------------
         // 3. Преобразование фитнеса в массы
         // -------------------------------------------
-        for (auto fit : fitness){
-            if (best_fit == worst_fit)
+        masses.clear();
+        masses.reserve(N_PARTICLES);
+        if (best_fit == worst_fit) {
+            for (int i = 0; i < N_PARTICLES; ++i) {
                 masses.push_back(1.0);
-            else
-                masses.push_back((fit - worst_fit) / (best_fit - worst_fit));
-            auto Mass_sum{ [](std::vector<double> masses){double sum; for(auto m : masses){sum += m;} return sum;}};
-            double mass_sum = Mass_sum(masses);
-            for (auto m : masses)
-                m /=mass_sum;
+            }
+        } else {
+            for (int i = 0; i < N_PARTICLES; ++i) {
+                masses.push_back((fitness[i] - worst_fit) / (best_fit - worst_fit));
+            }
+        }
+
+        // 4. Нормировка масс
+        double mass_sum = std::accumulate(masses.begin(), masses.end(), 0.0);
+        for (auto& m : masses) {
+            m /= (mass_sum + eps);
         }
         // ------------------------------------------------------
         // 4. Вычисление гравитационной константы G(t)
         // ------------------------------------------------------
-        G = G0 * std::exp(-alpha * iter / ITERATION);
+        G = G0 * std::exp(- alpha * static_cast<double>(iter) / ITERATION);
         
         // ----------------------------------------------------
         // 5. Расчёт сил между частицами
         // ----------------------------------------------------
-
+        for (auto& f : forces)
+            std::fill(f.begin(), f.end(), 0.0);
         for (int i = 0; i<N_PARTICLES; i++){
             for (int j = 0; j<N_PARTICLES; j++){
                 if (i == j) continue;
@@ -136,7 +148,6 @@ int main() {
 
             }
         }
-
         // ---------------------------------------------
         // 6. Обновление ускорения, скорости и позиций
         // ---------------------------------------------
@@ -161,7 +172,9 @@ int main() {
             << "\33[31mGlobal best position:\33[0m "
             << *global_best_ptr << "\n";
 
-
+    for (int i = 0; i < history.size(); ++i)
+        std::cout << "iter=" << i
+            << "  best_fitness=" << history[i] << "\n";
     
 
 
