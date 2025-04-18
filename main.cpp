@@ -8,18 +8,20 @@
 #include <iomanip>  
 #include <algorithm> 
 #include <iterator>  
+#include <fstream>
+
 
 // -----------------------------
 // 1. Задание параметров задачи
 // -----------------------------
 #define DIMENSIONS 2
 #define N_PARTICLES 300
-#define ITERATION 40
-#define MIN_RAND -10
-#define MAX_RAND 10
+#define ITERATION 100
+#define MIN_RAND -100
+#define MAX_RAND 100
 
-#define G0 100       // Начальное значение гравитационной константы
-#define alpha 20     // Параметр экспоненциального затухания G(t)
+#define G0 100      // Начальное значение гравитационной константы
+#define alpha 20    // Параметр экспоненциального затухания G(t)
 #define eps 1e-6     // Маленькая константа для предотвращения деления на ноль
 
 
@@ -75,7 +77,6 @@ int main() {
         std::cout << std::fixed << std::setprecision(3)<< std::showpos;
         std::cout << "\33[34mParticle " << i << ":\33[0m\n";
         std::cout << "  pos: " << positions[i] << "\n";
-        std::cout << "  vel: " << velocities[i] << "\n\n";
     }
 
 
@@ -84,8 +85,15 @@ int main() {
     std::vector<double> fitness(N_PARTICLES);
     std::vector<double> masses;
     std::vector<double> history;
-
     double G;
+
+
+    std::ofstream ofs("../positions.csv");
+    ofs << "iteration,particle";
+    for (int d = 0; d < DIMENSIONS; ++d) ofs << ",x" << d;
+    for (int d = 0; d < DIMENSIONS; ++d) ofs << ",bestx" << d;
+    ofs << "\n";
+
 
     for (int iter = 0; iter < ITERATION; ++iter) {
         for (int i = 0; i < N_PARTICLES; ++i)
@@ -163,7 +171,19 @@ int main() {
                     positions[N][D] = MAX_RAND;
 
             }
+            ofs << iter << "," << N;
+            for (int d = 0; d < DIMENSIONS; ++d) {
+                ofs << "," << std::fixed << std::setprecision(6)
+                    << positions[N][d];
+            }
+            for (int d = 0; d < DIMENSIONS; ++d) {
+                ofs << "," << std::fixed << std::setprecision(6)
+                    << (*global_best_ptr)[d];
+            }
+            ofs <<"\n";
+
         }
+
 
     }
 
@@ -175,7 +195,15 @@ int main() {
     for (int i = 0; i < history.size(); ++i)
         std::cout << "iter=" << i
             << "  best_fitness=" << history[i] << "\n";
-    
+
+    std::ofstream out("../data.csv");
+    out << "iteration"<< ",fitness\n";
+    if (out.is_open()){
+        for (int i = 0; i < history.size(); ++i)
+            out << i << "," << history[i] << "\n";
+    }
+    out.close();
+
 
 
     return 0;
