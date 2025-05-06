@@ -10,17 +10,22 @@ public:
     explicit FitnessLogger(const std::string& path = "fitness_trace.csv")
         : csv_path_(path)
     {
-        bool exists = std::filesystem::exists(csv_path_);
-        ofs_.open(csv_path_, std::ios::app);
+        ofs_.open(csv_path_);
+        ofs_.clear();
         if(!ofs_) throw std::runtime_error("Cannot open csv for writing");
 
-        if(!exists) ofs_ << "gsa_bf,mggsa_bf\n";
+        
+        if (ofs_.is_open()) ofs_ << "iter,time,bf\n";
     }
 
-    void push(double gsa_bf, double mggsa_bf)
+    ~FitnessLogger(){
+        if(ofs_) ofs_.close();
+    }
+
+    void push(int iter, int seconds , double mggsa_bf)
     {
         std::scoped_lock lk(mut_);
-        ofs_ << std::setprecision(15) << gsa_bf << ',' << mggsa_bf << '\n';
+        ofs_ << std::setprecision(15 )<< iter << "," << seconds << "," << mggsa_bf << '\n';
     }
 
 private:

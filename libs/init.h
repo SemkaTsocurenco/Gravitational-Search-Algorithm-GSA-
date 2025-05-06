@@ -25,8 +25,8 @@ namespace gsa {
 // -----------------------------
 // 1. Параметры задачи
 // -----------------------------
-constexpr int    DIMENSIONS   = 1000;
-constexpr int    N_PARTICLES  = 300;
+constexpr int    DIMENSIONS   = 100;
+constexpr int    N_PARTICLES  = 400;
 constexpr int    ITERATIONS   = 800;
 constexpr double MIN_RAND     = -100.0;
 constexpr double MAX_RAND     =  100.0;
@@ -38,6 +38,11 @@ constexpr double V_MAX        = (MAX_RAND - MIN_RAND) * 0.1;   // «физиче
 
 constexpr double V_MAX_FRAC  = 0.1;    // V_max = frac*(X_MAX-X_MIN)
 constexpr int    K_BEST      = N_PARTICLES / 10;   // 10 % лучших
+
+
+constexpr int    L_GROUPS    = 5;     // число групп в алгоритме λ
+constexpr int    MDSTEP      = 10;    // пересчёт mds2D каждые MDSTEP итераций
+constexpr int    K_MIN       = 5;     // нижняя граница k-best
 
 using Vec    = std::vector<double>;
 using Matrix = std::vector<Vec>;
