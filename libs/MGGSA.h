@@ -18,7 +18,7 @@ namespace gsa {
 /* ---------- Быстрый MDS (N×D → N×2) ------------- */
 inline Eigen::MatrixXd mds2D(const Matrix& pos)
 {
-    Eigen::MatrixXd B(N_PARTICLES, N_PARTICLES);   // ⬅️  больше не static
+    Eigen::MatrixXd B(N_PARTICLES, N_PARTICLES);   //   больше не static
     #pragma omp parallel for
     for (int i = 0; i < N_PARTICLES; ++i) {
         B(i,i) = 0.0;
@@ -46,7 +46,7 @@ inline Eigen::MatrixXd mds2D(const Matrix& pos)
 inline Vec lambda_coeff(const Matrix& pos,
                         const Vec&    fitness)
 {
-    Eigen::MatrixXd Y = mds2D(pos);                // ⬅️  локальная переменная
+    Eigen::MatrixXd Y = mds2D(pos);                //   локальная переменная
 
     /* 1. индексы K_best */
     const int K = K_BEST();
