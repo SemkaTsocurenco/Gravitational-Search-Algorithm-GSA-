@@ -102,7 +102,7 @@ inline void GSA(std::string_view objective_name,
             }
 
         /* 8. early stop */
-        if (stagnant >= 2000 || global_best < 0.01) break;
+        if (stagnant >= 30000 || best_fit < 1e-5) break;
     }
 
     /* ---------- 9. лог итогов ---------- */

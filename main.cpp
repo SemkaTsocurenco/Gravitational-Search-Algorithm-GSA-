@@ -9,14 +9,15 @@ using namespace gsa;  // чтобы не писать каждый раз gsa::
 
 int main() {
     // фиксированное число итераций
-    ITERATIONS = 90000;
+    ITERATIONS = 500000;
 
     // список целевых функций
+    // const char* objectives[] = { "ackley"};
     const char* objectives[] = {"sphere", "rosenbrock", "rastrigin", "ackley"};
     const std::string run_csv = "runs.csv";
 
-    for (int N = 50; N <= 200; N += 50) {
-        for (int D = 20; D <= 100; D += 10) {
+    for (int N = 10; N <= 100; N += 10) {
+        for (int D = 20; D <= 101; D += 40) {
             N_PARTICLES = N;
             DIMENSIONS  = D;
 

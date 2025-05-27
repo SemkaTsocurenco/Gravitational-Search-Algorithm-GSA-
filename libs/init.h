@@ -25,15 +25,15 @@ namespace gsa {
 inline int    DIMENSIONS   = 2;
 inline int    N_PARTICLES  = 400;
 inline int    ITERATIONS   = 2000;
-inline double MIN_RAND     = -100.0;
-inline double MAX_RAND     =  100.0;
+inline double MIN_RAND     = -10.0;
+inline double MAX_RAND     =  10.0;
 
-inline double G0           = 100.0;   // начальная G
-inline double ALPHA        = 10.0;    // затухание
+inline double G0           = 200.0;   // начальная G
+inline double ALPHA        = 20.0;    // затухание
 inline double EPS          = 1e-9;    // защита от деления на 0
 inline double V_MAX_FRAC   = 0.1;     // V_max = frac*(X_MAX−X_MIN)
 inline int    L_GROUPS     = 5;       // число групп в MGGSA
-inline int    MDSTEP       = 10;      // период пересчёта λ
+inline int    MDSTEP       = 3;      // период пересчёта λ
 inline int    K_MIN        = 5;       // нижняя граница k-best
 
 // вычисляем на лету, чтобы учесть возможное изменение N_PARTICLES и X_MIN/MAX

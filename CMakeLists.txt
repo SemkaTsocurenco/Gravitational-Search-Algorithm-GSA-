@@ -1,13 +1,17 @@
 cmake_minimum_required(VERSION 3.18)
 project(gsa_optimised LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
 include_directories("./libs/")
-add_executable(gsa_optimised main.cpp)
+add_executable(gsa_optimised main.cpp 
+                ./libs/fitness_logger.h
+                libs/GSA.h
+                libs/init.h
+                libs/MGGSA.h)
 
 find_package(Eigen3 REQUIRED)
 target_link_libraries(gsa_optimised PRIVATE Eigen3::Eigen)

@@ -186,7 +186,7 @@ inline void MGGSA(std::string_view objective,
                 pos[i][d]  = std::clamp(pos[i][d], MIN_RAND, MAX_RAND);
             }
 
-        if (stagn >= 2000 || best_fit < 1e-5) break;
+        if (stagn >= 30000 || best_fit < 1e-5) break;
     }
 
     double total_ms = std::chrono::duration<double, std::milli>(

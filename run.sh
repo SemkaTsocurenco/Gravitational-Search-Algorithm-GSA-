@@ -6,4 +6,4 @@ cmake ../
 make -j${nproc}
 ./gsa_optimised 
 cd ../
-python3 ./animation.py
+python3 ./graph.py
